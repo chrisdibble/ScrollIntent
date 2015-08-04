@@ -1,0 +1,58 @@
+<html>
+    <head>
+        <title>ScrollIntent example</title>
+        <script src="scrollintent.js"></script>
+    </head>
+    <body>
+
+    <script>
+        window.onload = function () {
+            var scrollIntent,
+                scrollEl = document.querySelector('#example'),
+                markup = '';
+
+            for(var i = 0; i < 10000; i++) {
+                markup += '<div>' + i + '</div>';
+            }
+
+            scrollEl.innerHTML = markup;
+
+            scrollIntent = ScrollIntent(scrollEl, onDramaticScroll, Function.prototype, 1, 1);
+
+            function onDramaticScroll(direction) {
+                var quickLinkEl;
+
+                if(direction === 'down') {
+                    quickLinkEl = document.querySelector('#toBottom');
+                } else {
+                    quickLinkEl = document.querySelector('#toTop');
+                }
+                quickLinkEl.style.display = 'block';
+
+                setTimeout(function() {
+                    quickLinkEl.style.display = 'none';
+                }, 30000);
+            }
+
+            document.querySelector('#toTop').addEventListener('click', function() {
+                scrollEl.scrollTop = 0;
+                this.style.display = 'none';
+            });
+
+            document.querySelector('#toBottom').addEventListener('click', function() {
+                scrollEl.scrollTop = scrollEl.scrollHeight;
+                this.style.display = 'none';
+            });
+
+            window.onunload = function() {
+                scrollIntent.destroy();
+            };
+        };
+    </script>
+
+    <div id="example" style="height: 300px; overflow: scroll;"></div>
+
+    <div id="toTop" style="display: none;"><a href="#">Scroll to top</a></div>
+    <div id="toBottom" style="display: none;"><a href="#">Scroll to bottom</a></div>
+    </body>
+</html>
